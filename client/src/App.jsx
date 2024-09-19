@@ -9,6 +9,7 @@ import AdminPanel from './Components/ui/AdminPanel';
 import { useDisclosure } from '@chakra-ui/react';
 import { Navigate } from 'react-router-dom';
 import './App.css';
+import FavoritesPage from './Components/pages/FavoritesPage/FavoritesPage';
 
 function App() {
   const [user, setUser] = useState({});
@@ -38,6 +39,10 @@ function App() {
         {
           path: '/signUp',
           element: <SignUpPage setUser={setUser} />,
+        },
+        {
+          path: '/favourites/:id',
+          element: <FavoritesPage />,
         },
         {
           path: '/dashboard',

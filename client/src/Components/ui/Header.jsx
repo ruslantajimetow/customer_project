@@ -23,54 +23,92 @@ function Header({ user, setUser }) {
       navigate('/');
     }
   };
+
   return (
-    <Flex p={5} bgColor="gray.200">
+    <Flex
+      p={5}
+      bgColor="gray.200"
+      shadow="md"
+      borderRadius="lg"
+      alignItems="center"
+    >
       <HStack spacing={3}>
         <NavLink to="/">
           <Image
             src="https://img.freepik.com/premium-photo/logo-real-estate-agency-sale-rental-apartments-houses-ads-social-media_653623-10380.jpg"
             cursor="pointer"
             w="60px"
+            borderRadius="lg"
           />
         </NavLink>
         <Box>
-          <Heading fontSize="20px" color="gray.600">
+          <Heading fontSize="20px" color="gray.600" fontWeight="bold">
             Сервис для поиска аренды жилья
           </Heading>
         </Box>
       </HStack>
       <Spacer />
       <HStack spacing={4}>
-        {user?.email === 'admin@admin.com' && (
-          <NavLink to="/dashboard">
-            <Button variant="ghost" colorScheme="blue">
-              Админ-панель
-            </Button>
-          </NavLink>
+        {user?.email && user?.email !== 'admin@admin.com' && (
+          <HStack spacing={2}>
+            <Text fontSize="20px" color="gray.600" fontWeight="bold">
+              Привет, {user.username}!
+            </Text>
+            <NavLink to={`/favourites/${user.id}`}>
+              <Button
+                colorScheme="orange"
+                leftIcon={<CalendarIcon />}
+                variant="solid"
+                borderRadius="lg"
+              >
+                Избранное
+              </Button>
+            </NavLink>
+          </HStack>
         )}
-        {!user?.email && user?.email !== 'admin@admin.com' ? (
+        {user?.email && user?.email !== 'admin@admin.com' ? (
+          <Button
+            onClick={logoutHandler}
+            colorScheme="blue"
+            variant="solid"
+            borderRadius="lg"
+          >
+            Выйти
+          </Button>
+        ) : (
           <>
             <NavLink to="/signIn">
-              <Button variant="ghost" colorScheme="blue">
+              <Button
+                variant="ghost"
+                colorScheme="blue"
+                borderRadius="lg"
+                fontSize="md"
+              >
                 Вход
               </Button>
             </NavLink>
             <NavLink to="/signUp">
-              <Button colorScheme="blue">Регистрация</Button>
+              <Button
+                colorScheme="blue"
+                variant="solid"
+                borderRadius="lg"
+                fontSize="md"
+              >
+                Регистрация
+              </Button>
             </NavLink>
           </>
-        ) : (
-          <Button onClick={logoutHandler} colorScheme="blue">
-            Выйти
-          </Button>
         )}
-
-        {user?.email && user?.email !== 'admin@admin.com' && (
-          <NavLink to="/cart">
-            <Button colorScheme="orange" leftIcon={<CalendarIcon />}>
-              Избранное
+        {user?.email === 'admin@admin.com' && (
+          <NavLink to="/dashboard">
+            <Button
+              variant="ghost"
+              colorScheme="blue"
+              borderRadius="lg"
+              fontSize="md"
+            >
+              Админ-панель
             </Button>
-            <Text>Привет {user.username}</Text>
           </NavLink>
         )}
       </HStack>
