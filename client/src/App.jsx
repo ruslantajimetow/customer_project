@@ -1,18 +1,19 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { useState } from 'react';
-import RootLayout from './RootLayout';
-import SignInPage from './Components/pages/SignInPage';
-import SignUpPage from './Components/pages/SignUpPage';
-import { useEffect } from 'react';
-import axiosInstance, { setAccessToken } from './axiosInstance';
-import AdminPanel from './Components/ui/AdminPanel';
-import { useDisclosure } from '@chakra-ui/react';
-import { Navigate } from 'react-router-dom';
-import './App.css';
-import FavoritesPage from './Components/pages/FavoritesPage/FavoritesPage';
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { useState } from "react";
+import RootLayout from "./RootLayout/RootLayout";
+import SignInPage from "./Components/pages/SignInPage";
+import SignUpPage from "./Components/pages/SignUpPage";
+import { useEffect } from "react";
+import axiosInstance, { setAccessToken } from "./axiosInstance";
+import AdminPanel from "./Components/ui/AdminPanel";
+import { useDisclosure } from "@chakra-ui/react";
+import { Navigate } from "react-router-dom";
+import "./App.css";
+import HomePage from "./Components/pages/HomePage/Homepage";
 
 function App() {
   const [user, setUser] = useState({});
+  const [housings, setHousings] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -20,24 +21,27 @@ function App() {
       setUser(res.data.user);
       setAccessToken(res.data.accessToken);
     });
+    axiosInstance.get('/housings').then((res) => {
+      setHousings(res.data);
+    });
   }, []);
 
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: <RootLayout user={user} setUser={setUser} />,
       children: [
         {
-          path: '/',
-          element: <div>Homepage</div>,
+          path: "/",
+          element: <HomePage />,
         },
 
         {
-          path: '/signIn',
+          path: "/signIn",
           element: <SignInPage setUser={setUser} />,
         },
         {
-          path: '/signUp',
+          path: "/signUp",
           element: <SignUpPage setUser={setUser} />,
         },
         {
@@ -45,10 +49,16 @@ function App() {
           element: <FavoritesPage />,
         },
         {
-          path: '/dashboard',
+          path: "/dashboard",
           element: (
             <ProtectedRoute role={user.role} user={user}>
-              <AdminPanel isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+              <AdminPanel
+                isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
+                housings={housings}
+                setHousings={setHousings}
+              />
             </ProtectedRoute>
           ),
         },
