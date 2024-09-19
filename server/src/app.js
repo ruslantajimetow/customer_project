@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 const express = require('express');
+const createAdmin = require('./scripts/admin');
 
 const app = express();
 const { PORT } = process.env;
@@ -17,6 +18,7 @@ const corsConfig = {
 
 app.use(cors(corsConfig));
 app.use(cookieParser());
+createAdmin();
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
