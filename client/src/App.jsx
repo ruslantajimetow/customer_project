@@ -45,6 +45,10 @@ function App() {
           element: <SignUpPage setUser={setUser} />,
         },
         {
+          path: '/favourites/:id',
+          element: <FavoritesPage />,
+        },
+        {
           path: "/dashboard",
           element: (
             <ProtectedRoute role={user.role} user={user}>
