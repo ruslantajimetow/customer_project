@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   Button,
@@ -8,41 +8,50 @@ import {
   Image,
   Stack,
   Text,
-} from "@chakra-ui/react";
-import styles from "./CardInPage.module.css";
+} from '@chakra-ui/react';
+import styles from './CardInPage.module.css';
 
-export default function CardInPage() {
+export default function CardInPage({
+  title,
+  image,
+  address,
+  price,
+  desc,
+  user,
+}) {
+  const baseUrl = 'http://localhost:3100';
   return (
     <div>
       <Card
-        direction={{ base: "column", sm: "row" }}
+        direction={{ base: 'column', sm: 'row' }}
         overflow="hidden"
         variant="outline"
-        width="1100px"
+        maxH="300px"
+        mb="30px"
       >
         <Image
           objectFit="cover"
-          maxW={{ base: "100%", sm: "400px" }}
-          width="500px"
-          src="https://i.pinimg.com/originals/e8/a5/aa/e8a5aab431ef11caa24282a3fef66e21.jpg"
-          alt=""
+          maxW={{ base: '100%', sm: '300px' }}
+          src={`${baseUrl}${image}`}
+          alt="Uploaded"
         />
 
         <Stack>
           <CardBody>
-            <Heading size="md">Апартаменты "Mua"</Heading>
+            <Heading size="md">{title}</Heading>
 
-            <Text py="2">
-              Современные апартаменты в самом сердце старого города.
-            </Text>
+            <Text py="2">{desc}</Text>
+            <Text py="2">{address}</Text>
           </CardBody>
 
           <CardFooter>
             <div className={styles.cardBottom}>
-              <Button variant="solid" colorScheme="blue">
-                Добавить в избранное
-              </Button>
-              <div>5400₽ за сутки</div>
+              {user.email !== 'admin@admin.com' && (
+                <Button variant="solid" colorScheme="blue">
+                  Добавить в избранное
+                </Button>
+              )}
+              <div>{price} ₽ </div>
             </div>
           </CardFooter>
         </Stack>

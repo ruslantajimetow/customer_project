@@ -1,20 +1,63 @@
-import React from "react";
-import styles from "./HomePage.module.css";
-import { Button } from "@chakra-ui/react";
-import CardInPage from "./CardInPage.jsx";
+import React, { useEffect, useState } from 'react';
+import styles from './HomePage.module.css';
+import { Button, Grid, GridItem } from '@chakra-ui/react';
+import CardInPage from './CardInPage.jsx';
+import axiosInstance from '../../../axiosInstance.js';
+import { NavLink } from 'react-router-dom';
 
-export default function Homepage() {
+export default function Homepage({ housings, user }) {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  useEffect(() => {
+    axiosInstance.get(`/categories`).then((res) => setCategories(res.data));
+  }, []);
+
+  const filteredHousings =
+    selectedCategory === 'All'
+      ? housings
+      : housings.filter(
+          (item) =>
+            item.Category.name.toLowerCase() === selectedCategory.toLowerCase()
+        );
+
   return (
     <div className={styles.container}>
       <div className={styles.buttonTop}>
-        <Button className={styles.button}>Все категории</Button>
-        <Button className={styles.button}>Комнаты</Button>
-        <Button className={styles.button}>Квартиры</Button>
-        <Button className={styles.button}>Дома</Button>
+        <Button
+          onClick={() => setSelectedCategory('All')}
+          colorScheme="blue"
+          variant={selectedCategory === 'All' ? 'solid' : 'outline'}
+        >
+          All
+        </Button>
+        {categories.map((item) => {
+          return (
+            <Button
+              onClick={() => setSelectedCategory(item.name)}
+              colorScheme="blue"
+              variant={selectedCategory === item.name ? 'solid' : 'outline'}
+            >
+              {item.name.toUpperCase()}
+            </Button>
+          );
+        })}
       </div>
-      <div className={styles.card}>
-        <CardInPage />
-      </div>
+      <Grid gridTemplateColumns="repeat(1, 1100px)" justifyContent="center">
+        {filteredHousings.map(({ id, title, image, address, desc, price }) => {
+          return (
+            <GridItem key={id}>
+              <CardInPage
+                title={title}
+                image={image}
+                address={address}
+                desc={desc}
+                price={price}
+                user={user}
+              />
+            </GridItem>
+          );
+        })}
+      </Grid>
     </div>
   );
 }

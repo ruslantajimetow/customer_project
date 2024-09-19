@@ -22,14 +22,9 @@ function ModalForm({
   setIsEdit,
   setEditId,
   setHousings,
+  content,
+  setContent,
 }) {
-  const [content, setContent] = useState({
-    title: '',
-    desc: '',
-    address: '',
-    price: '',
-    categoryId: '',
-  });
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -115,6 +110,7 @@ function ModalForm({
             },
           }
         );
+
         if (response.status === 200) {
           alert('Success');
           setContent({
@@ -138,6 +134,13 @@ function ModalForm({
   };
 
   const onCloseModal = () => {
+    setContent({
+      title: '',
+      address: '',
+      desc: '',
+      categoryId: '',
+      price: '',
+    });
     setIsEdit(false);
     setEditId(null);
     onClose();

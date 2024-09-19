@@ -25,9 +25,23 @@ router.get('/', async (req, res) => {
   try {
     const housings = await Housing.findAll({
       include: Category,
+      order: [['id', 'ASC']],
     });
     const data = housings.map((item) => item.get({ plain: true }));
     res.json(data);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(400);
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const housing = await Housing.findOne({
+      where: { id },
+    });
+    res.json(housing.get());
   } catch (error) {
     console.log(error);
     res.sendStatus(400);

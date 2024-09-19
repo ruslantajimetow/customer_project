@@ -9,7 +9,7 @@ import AdminPanel from './Components/ui/AdminPanel';
 import { useDisclosure } from '@chakra-ui/react';
 import { Navigate } from 'react-router-dom';
 import './App.css';
-import HomePage from './Components/pages/HomePage/Homepage';
+import HomePage from './Components/pages/HomePage/HomePage';
 import FavoritesPage from './Components/pages/FavoritesPage/FavoritesPage';
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
       children: [
         {
           path: '/',
-          element: <HomePage />,
+          element: <HomePage user={user} housings={housings} />,
         },
 
         {
@@ -49,6 +49,7 @@ function App() {
           path: '/favourites/:id',
           element: <FavoritesPage />,
         },
+
         {
           path: '/dashboard',
           element: (

@@ -1,16 +1,17 @@
-import React from "react";
-import Header from "../Components/ui/Header";
-import { Outlet } from "react-router-dom";
-import styles from "./RootLayout.module.css";
-import Footer from "../Components/ui/Footer/Footer";
+import React from 'react';
+import Header from '../Components/ui/Header';
+import { Outlet } from 'react-router-dom';
+import Footer from '../Components/ui/Footer/Footer';
+import { Flex, Spacer } from '@chakra-ui/react';
 
 function RootLayout({ user, setUser }) {
   return (
-    <div className={styles.wrapperPage}>
+    <Flex flexDir="column" minH="100vh">
       <Header user={user} setUser={setUser} />
       <Outlet />
-      <Footer />
-    </div>
+      <Spacer />
+      <Footer mt="auto" />
+    </Flex>
   );
 }
 

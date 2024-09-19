@@ -34,11 +34,29 @@ export default function AdminPanel({
   const [users, setUsers] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [content, setContent] = useState({
+    title: '',
+    desc: '',
+    address: '',
+    price: '',
+    categoryId: '',
+  });
   useEffect(() => {
     axiosInstance.get('/users').then((response) => setUsers(response.data));
   }, []);
 
-  const onEditModal = (id) => {
+  const onEditModal = async (id) => {
+    const res = await axiosInstance.get(`housings/${id}`);
+
+    if (res.status === 200) {
+      setContent({
+        title: res.data.title,
+        address: res.data.address,
+        desc: res.data.desc,
+        categoryId: res.data.categoryId,
+        price: res.data.price,
+      });
+    }
     setIsEdit(true);
     setEditId(id);
     onOpen();
@@ -82,7 +100,7 @@ export default function AdminPanel({
         >
           Users
         </Text>
-        <Table variant="simple">
+        <Table variant="striped">
           <Thead>
             <Tr>
               <Th>User ID</Th>
@@ -116,7 +134,7 @@ export default function AdminPanel({
       {/* Housings table */}
 
       {housings.length > 0 && (
-        <TableContainer p={7}>
+        <TableContainer p={7} mb="20px">
           <Text
             fontSize="19px"
             color="blue.400"
@@ -126,7 +144,7 @@ export default function AdminPanel({
           >
             Housings
           </Text>
-          <Table variant="simple">
+          <Table variant="striped">
             <Thead>
               <Tr>
                 <Th>#</Th>
@@ -145,9 +163,15 @@ export default function AdminPanel({
                     <Tr key={id}>
                       <Td>{id}</Td>
                       <Td>{title}</Td>
-                      <Td>{desc}</Td>
+                      <Td>
+                        {desc.length > 20 ? desc.slice(0, 20) + '...' : desc}
+                      </Td>
                       <Td>{image}</Td>
-                      <Td>{address}</Td>
+                      <Td>
+                        {address.length > 20
+                          ? address.slice(0, 20) + '...'
+                          : desc}
+                      </Td>
                       <Td>{price}</Td>
                       <Td>{categoryId}</Td>
 
@@ -176,6 +200,8 @@ export default function AdminPanel({
         onClose={onClose}
         setIsEdit={setIsEdit}
         setHousings={setHousings}
+        content={content}
+        setContent={setContent}
       />
     </>
   );
