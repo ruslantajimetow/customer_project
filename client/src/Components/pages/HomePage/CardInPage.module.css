@@ -1,0 +1,5 @@
+.cardBottom {
+  display: flex;
+  width: 640px;
+  justify-content: space-between;
+}
