@@ -1,15 +1,16 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { useState } from "react";
-import RootLayout from "./RootLayout/RootLayout";
-import SignInPage from "./Components/pages/SignInPage";
-import SignUpPage from "./Components/pages/SignUpPage";
-import { useEffect } from "react";
-import axiosInstance, { setAccessToken } from "./axiosInstance";
-import AdminPanel from "./Components/ui/AdminPanel";
-import { useDisclosure } from "@chakra-ui/react";
-import { Navigate } from "react-router-dom";
-import "./App.css";
-import HomePage from "./Components/pages/HomePage/Homepage";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { useState } from 'react';
+import RootLayout from './RootLayout/RootLayout';
+import SignInPage from './Components/pages/SignInPage';
+import SignUpPage from './Components/pages/SignUpPage';
+import { useEffect } from 'react';
+import axiosInstance, { setAccessToken } from './axiosInstance';
+import AdminPanel from './Components/ui/AdminPanel';
+import { useDisclosure } from '@chakra-ui/react';
+import { Navigate } from 'react-router-dom';
+import './App.css';
+import HomePage from './Components/pages/HomePage/Homepage';
+import FavoritesPage from './Components/pages/FavoritesPage/FavoritesPage';
 
 function App() {
   const [user, setUser] = useState({});
@@ -28,20 +29,20 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: '/',
       element: <RootLayout user={user} setUser={setUser} />,
       children: [
         {
-          path: "/",
+          path: '/',
           element: <HomePage />,
         },
 
         {
-          path: "/signIn",
+          path: '/signIn',
           element: <SignInPage setUser={setUser} />,
         },
         {
-          path: "/signUp",
+          path: '/signUp',
           element: <SignUpPage setUser={setUser} />,
         },
         {
@@ -49,7 +50,7 @@ function App() {
           element: <FavoritesPage />,
         },
         {
-          path: "/dashboard",
+          path: '/dashboard',
           element: (
             <ProtectedRoute role={user.role} user={user}>
               <AdminPanel

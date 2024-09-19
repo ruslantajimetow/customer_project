@@ -66,7 +66,7 @@ function Header({ user, setUser }) {
             </NavLink>
           </HStack>
         )}
-        {user?.email && user?.email !== 'admin@admin.com' ? (
+        {user?.email && user?.email === 'admin@admin.com' ? (
           <Button
             onClick={logoutHandler}
             colorScheme="blue"
