@@ -66,7 +66,7 @@ function Header({ user, setUser }) {
             </NavLink>
           </HStack>
         )}
-        {user?.email && user?.email === 'admin@admin.com' ? (
+        {user?.email && (
           <Button
             onClick={logoutHandler}
             colorScheme="blue"
@@ -75,7 +75,8 @@ function Header({ user, setUser }) {
           >
             Выйти
           </Button>
-        ) : (
+        )}
+        {!user.email && (
           <>
             <NavLink to="/signIn">
               <Button
