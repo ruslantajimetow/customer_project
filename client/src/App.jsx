@@ -13,12 +13,16 @@ import HomePage from "./Components/pages/HomePage/Homepage";
 
 function App() {
   const [user, setUser] = useState({});
+  const [housings, setHousings] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     axiosInstance.get(`/token/refresh`).then((res) => {
       setUser(res.data.user);
       setAccessToken(res.data.accessToken);
+    });
+    axiosInstance.get('/housings').then((res) => {
+      setHousings(res.data);
     });
   }, []);
 
@@ -41,10 +45,20 @@ function App() {
           element: <SignUpPage setUser={setUser} />,
         },
         {
+          path: '/favourites/:id',
+          element: <FavoritesPage />,
+        },
+        {
           path: "/dashboard",
           element: (
             <ProtectedRoute role={user.role} user={user}>
-              <AdminPanel isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+              <AdminPanel
+                isOpen={isOpen}
+                onOpen={onOpen}
+                onClose={onClose}
+                housings={housings}
+                setHousings={setHousings}
+              />
             </ProtectedRoute>
           ),
         },
