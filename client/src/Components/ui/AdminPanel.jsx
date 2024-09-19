@@ -60,7 +60,7 @@ export default function AdminPanel({
 
   return (
     <>
-      <Flex mt={5} p={5}>
+      <Flex p={5}>
         <Heading>Admin Panel</Heading>
         <Spacer></Spacer>
         <Button
