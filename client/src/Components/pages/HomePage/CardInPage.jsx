@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   Button,
@@ -8,8 +8,12 @@ import {
   Image,
   Stack,
   Text,
+  Flex,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import styles from './CardInPage.module.css';
+import axiosInstance from '../../../axiosInstance';
 
 export default function CardInPage({
   title,
@@ -18,8 +22,35 @@ export default function CardInPage({
   price,
   desc,
   user,
+  id,
 }) {
   const baseUrl = 'http://localhost:3100';
+  const [isAlert, setIsAlert] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+
+  const onAddToFavourites = async () => {
+    try {
+      const response = await axiosInstance.post('/favourites', {
+        userId: user.id,
+        housingId: id,
+      });
+      if (response.status === 201) {
+        setIsAlert(true);
+
+        setTimeout(() => {
+          setIsAlert(false);
+        }, 2000);
+      }
+    } catch (error) {
+      console.log(error.response.data);
+
+      setIsAdded(true);
+
+      setTimeout(() => {
+        setIsAdded(false);
+      }, 2000);
+    }
+  };
   return (
     <div>
       <Card
@@ -46,11 +77,32 @@ export default function CardInPage({
 
           <CardFooter>
             <div className={styles.cardBottom}>
-              {user.email !== 'admin@admin.com' && (
-                <Button variant="solid" colorScheme="blue">
+              {user.email && user.email !== 'admin@admin.com' ? (
+                <Button
+                  onClick={onAddToFavourites}
+                  variant="solid"
+                  colorScheme="blue"
+                >
                   Добавить в избранное
                 </Button>
+              ) : null}
+              {isAlert && (
+                <Flex>
+                  <Alert h="40px" status="success" variant="solid">
+                    <AlertIcon />
+                    Это объявление успешно добавлено!
+                  </Alert>
+                </Flex>
               )}
+              {isAdded && (
+                <Flex>
+                  <Alert h="40px" status="warning" variant="solid">
+                    <AlertIcon />
+                    Вы уже добавили это объявление!
+                  </Alert>
+                </Flex>
+              )}
+
               <div>{price} ₽ </div>
             </div>
           </CardFooter>

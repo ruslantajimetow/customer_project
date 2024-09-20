@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import styles from './HomePage.module.css';
-import { Button, Grid, GridItem } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+} from '@chakra-ui/react';
 import CardInPage from './CardInPage.jsx';
 import axiosInstance from '../../../axiosInstance.js';
 import { NavLink } from 'react-router-dom';
@@ -8,6 +15,7 @@ import { NavLink } from 'react-router-dom';
 export default function Homepage({ housings, user }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
+
   useEffect(() => {
     axiosInstance.get(`/categories`).then((res) => setCategories(res.data));
   }, []);
@@ -33,6 +41,7 @@ export default function Homepage({ housings, user }) {
         {categories.map((item) => {
           return (
             <Button
+              key={item.id}
               onClick={() => setSelectedCategory(item.name)}
               colorScheme="blue"
               variant={selectedCategory === item.name ? 'solid' : 'outline'}
@@ -53,6 +62,7 @@ export default function Homepage({ housings, user }) {
                 desc={desc}
                 price={price}
                 user={user}
+                id={id}
               />
             </GridItem>
           );

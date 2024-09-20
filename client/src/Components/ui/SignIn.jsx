@@ -7,6 +7,8 @@ import {
   FormLabel,
   Input,
   VStack,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import axiosInstance from '../../axiosInstance';
@@ -14,10 +16,10 @@ import { setAccessToken } from '../../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 
 function SignIn({ setUser }) {
-  const [feedBack, setFeedBack] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [isAlert, setIsAlert] = useState(false);
   const emailChangeHandler = (event) => {
     setEmail(event.target.value);
   };
@@ -27,23 +29,36 @@ function SignIn({ setUser }) {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const response = await axiosInstance.post(`/auth/signin`, {
-      email,
-      password,
-    });
-    if (response.status === 401) {
-      setFeedBack(response.data.message);
+    try {
+      const response = await axiosInstance.post(`/auth/signin`, {
+        email,
+        password,
+      });
+
+      setUser(response.data.user);
+      setAccessToken(response.data.accessToken);
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+      setIsAlert(true);
+
+      setTimeout(() => {
+        setIsAlert(false);
+      }, 2000);
     }
-    setFeedBack('');
-    setUser(response.data.user);
-    setAccessToken(response.data.accessToken);
-    navigate('/');
   };
   return (
-    <Flex mt={10} justifyContent="center">
+    <Flex mt={10} justifyContent="center" flexDir="column" alignItems="center">
+      {isAlert && (
+        <Flex mb="10px">
+          <Alert h="40px" status="error" variant="solid">
+            <AlertIcon />
+            Неверный адрес электронной почты или пароль!
+          </Alert>
+        </Flex>
+      )}
       <form onSubmit={submitHandler}>
         <FormControl w="500px" isRequired={true}>
-          {feedBack.length > 0 && <Text color="red">{feedBack}</Text>}
           <VStack spacing={8}>
             <Box w="100%">
               <FormLabel>Адрес электронной почты:</FormLabel>

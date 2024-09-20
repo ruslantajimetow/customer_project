@@ -6,6 +6,8 @@ import {
   FormLabel,
   Input,
   VStack,
+  Alert,
+  AlertIcon,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../axiosInstance';
@@ -16,6 +18,7 @@ function SignUp({ setUser }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isAlert, setIsAlert] = useState(false);
   const navigate = useNavigate();
 
   const nameChangeHandler = (event) => {
@@ -30,21 +33,38 @@ function SignUp({ setUser }) {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const response = await axiosInstance.post(`/auth/signup`, {
-      username: name,
-      email,
-      password,
-    });
-    setUser(response.data.user);
-    setAccessToken(response.data.accessToken);
-    setName('');
-    setEmail('');
-    setPassword('');
-    navigate('/');
+    try {
+      const response = await axiosInstance.post(`/auth/signup`, {
+        username: name,
+        email,
+        password,
+      });
+      setUser(response.data.user);
+      setAccessToken(response.data.accessToken);
+      setName('');
+      setEmail('');
+      setPassword('');
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+      setIsAlert(true);
+
+      setTimeout(() => {
+        setIsAlert(false);
+      }, 2000);
+    }
   };
 
   return (
-    <Flex mt={10} justifyContent="center">
+    <Flex mt={10} justifyContent="center" flexDir="column" alignItems="center">
+      {isAlert && (
+        <Flex mb="10px">
+          <Alert h="40px" status="error" variant="solid">
+            <AlertIcon />
+            Пользователь с таким адресом электронной почты уже существует!
+          </Alert>
+        </Flex>
+      )}
       <form onSubmit={submitHandler}>
         <FormControl w="500px" isRequired={true}>
           <VStack spacing={8}>

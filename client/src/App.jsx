@@ -47,7 +47,7 @@ function App() {
         },
         {
           path: '/favourites/:id',
-          element: <FavoritesPage />,
+          element: <FavoritesPage user={user} />,
         },
 
         {
