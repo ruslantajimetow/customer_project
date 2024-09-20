@@ -1,55 +1,50 @@
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    height: 100%;
-    
-  }
-  
-  .cardContainer {
-    /* Стили для первого карточного контейнера */
-    margin-bottom: 50px;
-    
-  }
-  
-  .headingContainer {
-    /* Стили для заголовка */
-    margin-bottom: 50px;
-  }
-  
-  .cartBottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  height: 100%;
+}
+
+.cardContainer {
+  /* Стили для первого карточного контейнера */
+  /* margin-bottom: 50px; */
+}
+
+.headingContainer {
+  /* Стили для заголовка */
+  /* margin-bottom: 50px; */
+}
+
+.cartBottom {
   display: flex;
   justify-content: space-between;
-  }
+}
 
-  .secondCardContainer {
-    /* Стили для второго карточного контейнера */
-    margin-bottom: 20px;
+.secondCardContainer {
+  /* Стили для второго карточного контейнера */
+  margin-bottom: 20px;
+}
+
+.cartDelete {
+  /* Стили для удаления карточки */
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.imgDelete {
+  /* Стили для изображения удаления */
+  border-radius: 10px;
+}
+
+@media (max-width: 767px) {
+  .image-container img {
+    flex-basis: calc(50% - 20px); /* 2 columns on smaller screens */
   }
-  
-  .cartDelete {
-    /* Стили для удаления карточки */
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 500px;
-    
+}
+
+@media (max-width: 480px) {
+  .image-container img {
+    flex-basis: 100%; /* 1 column on very small screens */
   }
-  
-  .imgDelete {
-    /* Стили для изображения удаления */
-    border-radius: 10px;
-  }
- 
-  @media (max-width: 767px) {
-    .image-container img {
-      flex-basis: calc(50% - 20px); /* 2 columns on smaller screens */
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .image-container img {
-      flex-basis: 100%; /* 1 column on very small screens */
-    }
-  }
- 
+}

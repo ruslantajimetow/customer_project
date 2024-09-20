@@ -11,9 +11,20 @@ import {
   Flex,
   Alert,
   AlertIcon,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import styles from './CardInPage.module.css';
 import axiosInstance from '../../../axiosInstance';
+import axios from 'axios';
+import { Map, Placemark, YMaps } from 'react-yandex-maps';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function CardInPage({
   title,
@@ -27,6 +38,34 @@ export default function CardInPage({
   const baseUrl = 'http://localhost:3100';
   const [isAlert, setIsAlert] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  const [mapCenter, setMapCenter] = useState([55.751244, 37.618423]); // Default: Moscow
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const geocodeAddress = async (address) => {
+    onOpen();
+    try {
+      const response = await axios.get(
+        `https://geocode-maps.yandex.ru/1.x/?apikey=f10e9383-a4f2-4406-8b18-23b4dfdfcb03&format=json&geocode=${encodeURIComponent(
+          address
+        )}`
+      );
+      const geoObject =
+        response.data.response.GeoObjectCollection.featureMember[0].GeoObject;
+      if (geoObject) {
+        const coordinates = geoObject.Point.pos
+          .split(' ')
+          .map(Number)
+          .reverse(); // Yandex returns "longitude latitude", reverse it for the map
+        setMapCenter(coordinates);
+        setSelectedAddress(address);
+      } else {
+        alert('Address not found');
+      }
+    } catch (error) {
+      console.error('Error geocoding the address:', error);
+    }
+  };
 
   const onAddToFavourites = async () => {
     try {
@@ -72,7 +111,56 @@ export default function CardInPage({
             <Heading size="md">{title}</Heading>
 
             <Text py="2">{desc}</Text>
-            <Text py="2">{address}</Text>
+            <Text py="2">
+              {address}{' '}
+              <Button
+                onClick={() => geocodeAddress(address)}
+                ml="5px"
+                variant="outline"
+                colorScheme="blue"
+              >
+                <ExternalLinkIcon />
+              </Button>
+            </Text>
+
+            <>
+              <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Карта</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody
+                    display="flex"
+                    justifyContent="center"
+                    flexDir="column"
+                    alignItems="center"
+                  >
+                    <YMaps>
+                      <Map
+                        defaultState={{ center: mapCenter, zoom: 15 }}
+                        state={{ center: mapCenter, zoom: 15 }}
+                      >
+                        {mapCenter && <Placemark geometry={mapCenter} />}
+                      </Map>
+                    </YMaps>
+                    {selectedAddress && (
+                      <Text overflowWrap="break-word" w="300px">
+                        <i>
+                          <strong>Адрес: </strong>
+                        </i>{' '}
+                        {selectedAddress}
+                      </Text>
+                    )}
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button colorScheme="blue" mr={3} onClick={onClose}>
+                      Close
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+            </>
           </CardBody>
 
           <CardFooter>
